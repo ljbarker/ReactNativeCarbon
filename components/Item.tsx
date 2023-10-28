@@ -11,32 +11,41 @@ interface WebsiteDataItemProps {
 }
 
 const WebsiteDataItem = ({ data, index, setData }: WebsiteDataItemProps) => {
-    // TODO: How can wetrack whether a given section is expanded?
-    // following line is just a placeholder; delete it!
-    const expanded = false;
-    // TODO: How can we color a given entry?
-    const color = "";
+    const [expanded, setExpanded] = useState(false);
+    const color = data.green ? "green" : "red";
     return (
         <View>
             <TouchableOpacity
                 onPress={() => {
-                    // TOOD: How can we toggle the expanded state when the item is pressed?
+                    setExpanded(!expanded);
                 }}
             >
                 <View style={styles.container}>
-                    {/* TODO: Set up an entry for a given data item, using relevant parts of the API response data */}
+                    <Text>{data.url}</Text>
+                    <View style = {styles.containerRightSection}>
+                        <Text>{data.cleanerThan}</Text>
+                        <Ionicons color={color} name = {expanded ? "chevron-up" : "chevron-down"}/>
+                    </View>
                 </View>
             </TouchableOpacity>
             {expanded && (
                 <TouchableOpacity
                     style={styles.dropdown}
-                    // TODO: What should happen when the dropdown section is pressed?
-                    onPress={() => {}}
+                    onPress={() => {
+                        setExpanded(false);
+                    }}
                 >
-                    {/* TODO: Add text elements to show the relevant parts of the API response data to go into the dropdown */}
+                    <Text>Bytes: {data.bytes}</Text>
+                    <Text>Adjusted Bytes: {data.statistics.adjustedBytes}</Text>
+                    <Text>CO2 Grams: {data.statistics.co2.grid.grams}</Text>
                     <Ionicons
                         onPress={() => {
                             // TODO: How can we update the data when clicking the remove option?
+                            setData((prevData) => {
+                                const newData = [...prevData];
+                                newData.splice(index, 1);
+                                setData(newData);
+                            });
                         }}
                         name="remove-circle-outline"
                         size={24}

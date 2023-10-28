@@ -15,6 +15,11 @@ const HistoryScreen = ({ navigation, route }: HistoryScreenProps) => {
     const { params } = route;
     const [data, setData] = useState<CarbonDataType[]>([]);
     // TODO: How can we update the data when the route params change? Hint: useEffect
+    useEffect(() => {
+        if (params?.data) {
+            setData(params.data);
+        }
+    }, [params])
 
     return (
         <>
@@ -28,18 +33,25 @@ const HistoryScreen = ({ navigation, route }: HistoryScreenProps) => {
                 <Ionicons
                     onPress={() => {
                         // TODO: Go to the search screen here, make sure to pass along data!
+                        navigation.navigate("Search", {
+                            data: data,
+                        });
                     }}
                     name="search-outline"
                     size={24}
                 />
             </View>
             {/* TODO: Set up the FlatList */}
-            {/* <FlatList
-                data={}
+            <FlatList
+                data={data}
                 renderItem={({ item, index }) => (
-                    
+                    <WebsiteDataItem
+                        data={item}
+                        index={index}
+                        setData={setData}
+                    />
                 )}
-            /> */}
+            />
         </>
     );
 };

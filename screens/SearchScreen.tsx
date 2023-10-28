@@ -21,6 +21,11 @@ const SearchScreen = ({ navigation, route }: SearchScreenProps) => {
     const [loading, setLoading] = useState(false);
 
     // TODO: How can we update the data when the route params change? Hint: useEffect
+    useEffect(() => {
+        if (params?.data) {
+            setData(params.data);
+        }
+    }, [params])
 
     useEffect(() => {
         navigation.setOptions({
@@ -28,6 +33,9 @@ const SearchScreen = ({ navigation, route }: SearchScreenProps) => {
                 <Ionicons
                     onPress={() => {
                         // TODO: Go back to the history screen here, make sure to pass along data!
+                        navigation.navigate("History", {
+                            data: data,
+                        })
                     }}
                     name="arrow-back"
                     size={24}
@@ -37,7 +45,18 @@ const SearchScreen = ({ navigation, route }: SearchScreenProps) => {
     }, [data]);
 
     const fetchResults = async () => {
-        // TODO: How can we fetch the results from the API? Note: This is a bit more challenging then the rest!
+        if(loading) {
+            return;
+        }
+        setLoading(true);
+        const result = await fetch(`https://api.websitecarbon.com/site?url=${encodeURI(query)}`);
+        const responseData = await result.json();
+        if ('error' in responseData || Object.keys(responseData).length === 0) {
+            setLoading(false);
+        }
+        const newData = [responseData, ...data];
+        setData(newData)
+        setLoading(false);
     };
 
     return (
@@ -56,12 +75,16 @@ const SearchScreen = ({ navigation, route }: SearchScreenProps) => {
             {/* TODO: What should we show when the result is loading? */}
             {loading && <></>}
             {/* TODO: Set up the FlatList */}
-            {/* <FlatList
-                data={}
+             <FlatList
+                data={data}
                 renderItem={({ item, index }) => (
-
+                    <WebsiteDataItem
+                        data={item}
+                        index={index}
+                        setData={setData}
+                    />
                 )}
-            /> */}
+            />
         </>
     );
 };

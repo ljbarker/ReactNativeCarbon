@@ -21,6 +21,16 @@ const NativeStackNavigator = createNativeStackNavigator<NativeStackParamList>();
 export default function App() {
     return (
         <NavigationContainer>
+            <NativeStackNavigator.Navigator initialRouteName="History">
+                <NativeStackNavigator.Screen
+                    name = "Search"
+                    component = {SearchScreen}
+                />
+                <NativeStackNavigator.Screen
+                    name = "History"
+                    component = {HistoryScreen}
+                />
+            </NativeStackNavigator.Navigator>
             {/* TODO: How can we set up the screen routing using the native stack navigator defined above? */}
         </NavigationContainer>
     );
